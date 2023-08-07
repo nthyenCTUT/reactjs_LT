@@ -1,0 +1,23 @@
+.background {
+    background-image: linear-gradient(to right, rgb(0, 234, 255), yellow);
+
+    .position {
+        width: 50%;
+        margin: 0 auto
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    form {
+        background-color: white;
+        padding-bottom: 20px;
+
+        .custom-eye {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+    }
+}
