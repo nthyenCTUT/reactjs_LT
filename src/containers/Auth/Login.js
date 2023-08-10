@@ -1,4 +1,7 @@
 import React from "react";
+import { connect } from "react-redux";
+import { Navigate } from "react-router-dom";
+import handelLogin from './../../services/userService'
 import './Login.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -31,17 +34,56 @@ class Login extends React.Component {
             password: event.target.value
         })
     }
-    handelLogin = (event) => {
-        console.log(this.state.username)
-        event.preventDefault()
+    handelLogin = async (event) => {
+        // console.log(this.state.username)
+        this.setState({
+            errMessage: ''
+        })
+        try {
+
+            let dataUser = await handelLogin(this.state.username, this.state.password)
+            //console.log(data)
+            if (dataUser.data.errCode != 2) {
+                this.setState({
+                    errMessage: dataUser.data.message
+                })
+            }
+            else {
+                //Login thành công
+                let userInfo = {
+                    username: dataUser.data.user,
+                    role: dataUser.data.role
+                }
+                console.log(userInfo)
+                this.props.userLoginSuccess(userInfo)
+            }
+        } catch (err) {
+            //Lỗi xảy ra khi chưa nhập user,pass
+            //lỗi trả về từ axios
+            // console.log(err.response)
+            // if (err.response.data) {
+            //     this.setState({
+            //         errMessage: err.response.data.message
+            //     })
+            // }
+
+            console.log(err)
+
+        }
+
+
 
     }
+
     handleShowHidePassword = () => {
         this.setState({
             isShowPassword: !this.state.isShowPassword
         })
     }
     render() {
+        if (this.props.isLoggedIn)
+            return <Navigate replace to="/" />;
+        console.log("Login:", this.props.isLoggedIn)
         return (
             <>
 
@@ -68,16 +110,29 @@ class Login extends React.Component {
                                 Looks good!
                             </div>
                         </div>
-
                         <div className="col-12">
-                            <button className="btn btn-primary" type="submit" onClick={(event) => this.handelLogin(event)}>Đăng nhập</button>
+                            {this.state.errMessage}
                         </div>
-                    </form>
+                        <div className="col-12">
+                            <button className="btn btn-primary" type="button" onClick={(event) => this.handelLogin(event)}>Đăng nhập</button>
+                        </div>
+                    </form >
 
 
-                </div>
+                </div >
             </>
         )
     }
 }
-export default Login
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.isLoggedIn
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        userLoginSuccess: (userInfo) => dispatch({ type: 'USER_LOGIN_SUCCESS', payload: userInfo })
+
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -11,6 +11,11 @@ import {
 } from "react-router-dom";
 import Home from './routes/Home'
 import Login from './containers/Auth/Login'
+//setup Redux
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import config from './store/reducers/config'
+// import { persistor } from './store/reducers/rootReducer'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,10 +37,18 @@ const router = createBrowserRouter([
 
 ]);
 
+const { reduxStore, persistor } = config()
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
+// const reduxStore = createStore(userReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={reduxStore}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   </React.StrictMode>
 );
 
