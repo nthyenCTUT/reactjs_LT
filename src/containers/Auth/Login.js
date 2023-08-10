@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
-import handelLogin from './../../services/userService'
+import userService from './../../services/userService'
 import './Login.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -41,7 +41,7 @@ class Login extends React.Component {
         })
         try {
 
-            let dataUser = await handelLogin(this.state.username, this.state.password)
+            let dataUser = await userService.handelLogin(this.state.username, this.state.password)
             //console.log(data)
             if (dataUser.data.errCode != 2) {
                 this.setState({

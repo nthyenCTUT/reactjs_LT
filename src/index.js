@@ -9,7 +9,7 @@ import {
   Route, Routes,
   Link,
 } from "react-router-dom";
-import Home from './routes/Home'
+import UserManager from './containers/User/UserManager'
 import Login from './containers/Auth/Login'
 //setup Redux
 import { Provider } from 'react-redux'
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        index: true, element: <Home />
+        index: true, element: <UserManager />
       },
 
 
